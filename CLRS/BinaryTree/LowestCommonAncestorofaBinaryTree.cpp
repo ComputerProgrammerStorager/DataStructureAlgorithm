@@ -88,3 +88,39 @@ public:
         return nullptr;
     }
 };
+
+// The same as to get parent first, but using dfs. 
+// Note that the last elment of both P and Q are the root
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        vector<TreeNode*> P;
+        vector<TreeNode*> Q;
+        TreeNode *res = nullptr;
+        
+        dfs_get_path(root,p,P);
+        dfs_get_path(root,q,Q);
+        int i = P.size()-1, j = Q.size()-1;
+        while ( i >= 0 && j >= 0 && P[i] == Q[j] ) {
+            res = P[i];
+            i--;
+            j--;
+        }
+            
+        return res;
+    }
+    
+    bool dfs_get_path(TreeNode* root, TreeNode *node, vector<TreeNode*> &path)
+    {
+        if (!root)
+            return false;
+        if ( root == node || dfs_get_path(root->left,node,path) || dfs_get_path(root->right,node,path) )
+        {
+            path.push_back(root);
+            return true;
+        }
+        else
+        return false;
+    }
+    
+};
