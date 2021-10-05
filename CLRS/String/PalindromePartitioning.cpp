@@ -23,55 +23,81 @@ s contains only lowercase English letters.
 
 #include "../Common/common_api.h"
 
-// dynamic programming used for preprocess the string and then dfs 
+// backtrack to visit each and every substring 
 class Solution {
-
 public:
     vector<vector<string>> partition(string s) {
         vector<vector<string>> res;
-        vector<string> ans;
-        int n = s.size();
-        vector<vector<bool>> dp(n,vector<bool>(n));
-        preprocess(s,dp);
-        dfs(s,0,res,ans,dp);
+        vector<string> curList;
+        dfs(res,s,0,curList);
         return res;
     }
     
-    void preprocess(string const& s, vector<vector<bool>> &dp)
+    void dfs(vector<vector<string>> &res, string s, int start, vector<string>& curList)
     {
-        int n = s.size();
-        for ( int i = 0; i < n; i++ )
-            dp[i][i] = true;
-        for ( int i = 0; i < n-1; i++ )
-            dp[i][i+1] = s[i] == s[i+1];
-        
-        for ( int len = 3; len <= n; len++ )
+        if ( start >= s.size() )
+            res.push_back(curList);
+        for( int e = start; e < s.size(); e++ )
         {
-            for ( int i = 0; i <= n-len; i++ )
+            if ( IsPalindrome(s,start,e) )
             {
-                int j = i+len-1;
-                dp[i][j] = (s[i] == s[j] && dp[i+1][j-1]);
-                // note we can include the above len 1 and 2 cases in the loop using the following recurrence equation
-                // dp[i][j] = (s[i] == s[j] && (j-i <= 2 || dp[i+1][j-1]));
+                curList.push_back(s.substr(start,e-start+1));
+                dfs(res,s,e+1,curList);
+                curList.pop_back();
             }
         }
     }
     
-    void dfs(string const& s, int cur, vector<vector<string>> &res, vector<string> &ans, vector<vector<bool>> &dp)
+    bool IsPalindrome(string &s, int l, int h)
     {
-        if ( cur == s.size() )
+        while( l < h )
         {
-            res.push_back(ans);
-            return;
+            if (s[l++] != s[h--])
+                return false;
         }
-        
-        for ( int i = cur; i < s.size(); i++ )
+        return true;
+    }
+};
+
+
+
+// To avoid repeating checking palindrome substrings, we can preprocess the palindrome information first, and then just check the array in the 
+// dfs search calls
+
+class Solution {
+public:
+    vector<vector<string>> partition(string s) {
+        vector<vector<string>> res;
+        vector<vector<bool>> dp(s.size(),vector<bool>(s.size(),false));
+        vector<string> curList;
+        getPalindromeDP(s,dp);
+        dfs(res,s,0,curList,dp);
+        return res;
+    }
+    
+    void dfs(vector<vector<string>> &res, string s, int start, vector<string>& curList, vector<vector<bool>> const& dp)
+    {
+        if ( start >= s.size() )
+            res.push_back(curList);
+        for ( int e = start; e < s.size(); e++ )
         {
-            if ( dp[cur][i] )
+            if ( dp[start][e] )
             {
-                ans.push_back(s.substr(cur,i-cur+1));
-                dfs(s,i+1,res,ans,dp);
-                ans.pop_back();
+                curList.push_back(s.substr(start,e-start+1));
+                dfs(res,s,e+1,curList,dp);
+                curList.pop_back();
+            }
+        }
+    }
+    
+    void getPalindromeDP( string const& s, vector<vector<bool>> &dp)
+    {
+        for ( int len = 1; len <= s.size(); len++ )
+        {
+            for ( int i = 0; i <= s.size() - len; i++ )
+            {
+                int j = i + len - 1;
+                dp[i][j] = s[i] == s[j] && (j - i <= 2 || dp[i+1][j-1] );
             }
         }
     }
