@@ -6,7 +6,11 @@ The path sum of a path is the sum of the node's values in the path.
 Given the root of a binary tree, return the maximum path sum of any path.
 */
 
-// for each node, we could have it only part of an existing recursive path or starte a new path with it being the highest point in which we need to update the global maximum if it qualifies
+// for each node, we could have it only part of an existing recursive path or start a new path with it being the highest point in which we need to update the global maximum if it qualifies
+// Image we are standing at a node being visited, then we consider the possible cases:
+// 1. the node is the reflection node of the path, i.e., the highest node 
+// 2. the node is part of a path, along with either it's left subtree, it's right subtree, or just itself if both left and right return negative values. 
+// Then we need to return a value to its parent, the value being the max path sum passing the node being visited 
 class Solution {
 public:
     int maxPathSum(TreeNode* root) {
