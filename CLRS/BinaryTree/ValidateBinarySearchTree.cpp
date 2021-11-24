@@ -46,3 +46,30 @@ public:
         
     }
 };
+
+// check the inorder traversal satisfies sorted, while traversing 
+class Solution {
+public:
+    bool isValidBST(TreeNode* root) {
+        stack<TreeNode*> stk;
+        TreeNode* prev = nullptr;
+        while( !stk.empty() || root )
+        {
+            while(root)
+            {
+                stk.push(root);
+                root = root->left;
+            }
+            
+            TreeNode *cur = stk.top();
+            stk.pop();
+            if ( prev != nullptr && prev->val >= cur->val )
+                return false;
+            prev = cur;
+            root = cur->right;
+        }
+        
+        return true;
+    }
+
+};

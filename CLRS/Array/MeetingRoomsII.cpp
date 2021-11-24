@@ -19,7 +19,7 @@ Constraints:
 */
 
 // For each timepoint increment by one if it's a start time and decrement by one if it's an endtime. 
-// then we just find the maximum value every occurred
+// then we just find the maximum value ever occurred
 class Solution {
 public:
     int minMeetingRooms(vector<vector<int>>& intervals) {

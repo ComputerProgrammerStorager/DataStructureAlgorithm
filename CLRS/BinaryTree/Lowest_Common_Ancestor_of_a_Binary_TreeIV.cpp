@@ -42,7 +42,7 @@ All nodes[i] are distinct.
 */
 
 
-// The lca will be the first node that has both left and right subtree containing some of the nodes. 
+// The lca will be the last node that has both left and right subtree containing some of the nodes. 
 // Since it's using DFS, then the return returned while walking back will be the result. 
 class Solution {
 public:
@@ -102,5 +102,32 @@ public:
         if ( *res == nullptr && cur_total == s.size() )
             *res = root;
         return cur_total;
+    }
+};
+
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, vector<TreeNode*> &nodes) {
+        for ( auto n : nodes ) 
+            if ( n == root )
+                return root;
+        set<TreeNode*> s(nodes.begin(),nodes.end());
+        if ( !root )
+            return root;
+        bool leftcontain = ContainNode(root->left, s);
+        bool rightcontain = ContainNode(root->right,s);
+        if ( leftcontain && rightcontain )
+            return root;
+        if ( leftcontain )
+            return lowestCommonAncestor(root->left,nodes);
+        else
+            return lowestCommonAncestor(root->right,nodes);
+    }
+    
+    bool ContainNode( TreeNode *root, set<TreeNode*> const& nodes )
+    {
+        if ( !root )
+            return false;
+        return nodes.count(root) || ContainNode(root->left,nodes) || ContainNode(root->right,nodes);
     }
 };

@@ -69,3 +69,37 @@ int main()
 {
     KthLargest *obj = new KthLargest(1,{});
 }
+
+// we can also use quick sorting to find the element, i.e., if the partition function returns the index we 
+// want, then we are done 
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        int n = nums.size();
+        return quick_select(nums,0,n-1, n-k);
+    }
+    int partition(vector<int>& nums, int s, int e )
+    {
+        int pivot = nums[e];
+        int store_idx = s - 1;
+        for ( int i = s; i <= e; i++ )
+        {
+            if ( nums[i] < pivot )
+            {
+                swap(nums[++store_idx],nums[i]);
+            }
+        }
+        swap(nums[++store_idx],nums[e]);
+        return store_idx;
+    }
+    int quick_select(vector<int>& nums, int s, int e, int k_smallest)
+    {
+        int pivot_idx = partition(nums,s,e);
+        if ( pivot_idx == k_smallest )
+            return nums[pivot_idx];
+        else if ( pivot_idx < k_smallest )
+            return quick_select(nums,pivot_idx+1,e,k_smallest);
+        else
+            return quick_select(nums,s,pivot_idx-1,k_smallest);
+    }
+};

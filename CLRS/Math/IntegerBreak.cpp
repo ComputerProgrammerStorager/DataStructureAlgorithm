@@ -111,3 +111,23 @@ public:
         return dp[n];
     }
 };
+
+// Note the dp[i] is initialized to i if it's not equal to n (meaning it doesn't divide any longer because it's internal to the recursion tree) and to 0 if it's equal to n
+class Solution {
+public:
+    int integerBreak(int n) {
+        vector<int> dp(n+1,0);     // interger to max prod 
+        dp[1] = 1;
+        for ( int i = 2; i <= n; i++ )
+        {
+            dp[i] = i==n ? 0 : i;
+            for ( int l = 1; l < i; l++ )
+            {
+                dp[i] = max(dp[i], dp[l] * dp[i-l]);
+            }
+  
+        }
+        
+        return dp[n];
+    }
+};
