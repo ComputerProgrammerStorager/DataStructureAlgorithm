@@ -45,3 +45,27 @@ public:
         return max(longest,right-left);
     }
 };
+
+class Solution {
+public:
+    int longestOnes(vector<int>& nums, int k) {
+        int n = nums.size(), l = 0, r = 0, ans = 0, zero_in_win = 0;
+        while( r < n )
+        {
+            if ( nums[r] == 0 )
+            {
+                zero_in_win++;
+                while(zero_in_win > k )
+                {
+                    if ( nums[l++] == 0 )
+                        zero_in_win--;
+                }
+            }
+            
+            ans = max(ans,r-l+1);
+            r++;
+        }
+        
+        return max(ans,r-l);
+    }
+};

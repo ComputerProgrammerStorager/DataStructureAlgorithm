@@ -97,3 +97,23 @@ public:
         return p+1;
     }
 };
+
+// Use set to maintain the largest k nums..
+// Note: we need to use multiset and when erase it erases all occurrence of the given value 
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        int n = nums.size();
+        unordered_multiset<int> maxs;
+        for ( auto n : nums )
+        {
+            maxs.insert(n);
+            if ( maxs.size() > k )
+            {
+                maxs.erase(maxs.find(*min_element(maxs.begin(),maxs.end())));
+            }
+        }
+        
+        return *min_element(maxs.begin(),maxs.end());
+    }
+};

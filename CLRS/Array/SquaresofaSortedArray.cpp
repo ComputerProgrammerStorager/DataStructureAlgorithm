@@ -96,6 +96,22 @@ public:
     }
 };
 
+// Two pointers: it's essentially equal to merging two sorted array 
+class Solution {
+public:
+    vector<int> sortedSquares(vector<int>& nums) {
+        int n = nums.size(), l = 0, r = n-1;
+        vector<int> res(n,0);
+        for ( int i = n-1; i >= 0; i-- )
+        {
+            int square = abs(nums[r]) > abs(nums[l]) ? nums[r--] : nums[l++];
+            res[i] = square * square;
+        }
+        
+        return res;
+    }
+};
+
 int main()
 {
     vector<int> data = {-4,-1,0,3,10};

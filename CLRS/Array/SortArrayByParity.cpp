@@ -41,6 +41,37 @@ public:
     }
 };
 
+class Solution {
+public:
+    vector<int> sortArrayByParity(vector<int>& nums) {
+        int even_idx = 0, n = nums.size(), walk;
+        while( even_idx < n && nums[even_idx] % 2 == 0 )
+            even_idx++;
+        walk = even_idx+1;
+        while( walk < n )
+        {
+            while( walk < n && nums[walk] % 2 )
+                walk++;
+            if ( walk < n )
+                swap(nums[even_idx++],nums[walk++]);
+        }
+        return nums;
+    }
+};
+
+class Solution {
+public:
+    vector<int> sortArrayByParity(vector<int>& nums) {
+        auto cmp = [](int a, int b){ 
+            if ( a&1 )
+                return false;
+            return true;
+        };
+        sort(nums.begin(),nums.end(),cmp);
+        return nums;
+    }
+};
+
 int main()
 {
     int arr[] = {0,2};

@@ -19,7 +19,7 @@ The length of the array won't exceed 10,000.
 You may assume the sum of all the numbers is in the range of a signed 32-bit integer.
 */
 
-// basically check all subarray sums and find an satisfied one 
+// basically check all subarray sums and find a satisfied one 
 // pay special attention when k == 0 in which case it returns true only if the sum is also 0
 // O(n^2)
 class Solution {
@@ -55,6 +55,9 @@ public:
 };
 
 // O(n)
+// we maintain a map mapping a remainder to it's index.. if we have two same remainders, then it means 
+// the elements between these two index sums up to a multipe of k, i.e., e - s.
+// Note: we need to initially set m[0] to -1. 
 class Solution {
 public:
     bool checkSubarraySum(vector<int>& nums, int k) {

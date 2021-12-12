@@ -104,3 +104,40 @@ public:
         return;
     }
 };
+
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        int idx = m+n-1;
+        m--;
+        n--;
+        while( m >= 0 || n >= 0 )
+        {
+            int x = m >= 0 ? nums1[m] : INT_MIN;
+            int y = n >= 0 ? nums2[n] : INT_MIN;
+            if ( x > y ) 
+            {
+                nums1[idx] = x;
+                m--;
+            }
+            else
+            {
+                nums1[idx] = y;
+                n--;
+            }
+            idx--;
+        }
+    }
+};
+
+
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        int idx = m+n-1, midx = m-1, nidx = n-1;
+        while( midx >= 0 && nidx >= 0 )
+            nums1[idx--] = nums1[midx] >= nums2[nidx] ? nums1[midx--] : nums2[nidx--];
+        while ( nidx >= 0 )
+            nums1[idx--] = nums2[nidx--];
+    }
+};

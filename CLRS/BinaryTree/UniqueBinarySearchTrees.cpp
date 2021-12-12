@@ -20,13 +20,13 @@ Constraints:
 */
 
 // We can perceieve this problem recurisvely, i.e., each node can be a root, and calculate the left subtree 
-// and the right subtree BST recurively. Once we get the left and right, then the total number of left * right 
+// and the right subtree BST recurively. Once we get the left and right, then the total number is left * right 
 // Let G(i) denote the number of BST that has i nodes [1,i]. Then G(0) = 1, G(1) = 1.
 // Let F(i,n) denote the number of BST that has i as root and total number of BST, then F(i,n) = G(i-1) * G(n-i)
 // G(n) = F(1,n) + F(2,n) + ... + F(n,n)
 //        Sigma(G(i-1)*G(n-i)) for i = 1 to n 
 // then we can use dynamical programming to calculate the result 
-
+// the number of BST only depends on the number of nodes 
 class Solution {
 public:
     int numTrees(int n) {

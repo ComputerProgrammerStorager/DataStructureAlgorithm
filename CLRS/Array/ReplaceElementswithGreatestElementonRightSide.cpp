@@ -67,3 +67,18 @@ public:
         return arr;
     }
 };
+
+class Solution {
+public:
+    vector<int> replaceElements(vector<int>& arr) {
+        int n = arr.size(), max_sofar = -1;
+        for ( int i = n-1; i >= 0; i-- )
+        {
+            int tmp = arr[i];
+            arr[i] = max_sofar;
+            max_sofar = max(max_sofar,tmp);
+        }
+        
+        return arr;
+    }
+};
