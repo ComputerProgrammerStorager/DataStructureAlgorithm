@@ -99,7 +99,7 @@ public:
 // use two pointers to calculate the water trapped on the current bar 
 // we get rid of the shorter bar first and move it 
 // if it's a new higher height, we just discard the current bar
-// otherwith add the water trapped by the current bar
+// otherwise add the water trapped by the current bar
 class Solution {
 public:
     int trap(vector<int>& height) {

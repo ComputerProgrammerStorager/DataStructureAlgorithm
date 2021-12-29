@@ -80,3 +80,31 @@ public:
         return cnt;
     }
 };
+
+// store all the indexes of every char and then binary search (upper_bound) each char's index in the targeet subsequence
+class Solution {
+public:
+    int numMatchingSubseq(string s, vector<string>& words) {
+        vector<vector<int>> chidx(26);
+        int cnt = 0;
+        for ( int i = 0; i < s.size(); i++ )
+            chidx[s[i]-'a'].push_back(i);
+        for ( auto w : words )
+        {
+            int last_idx = -1, j = 0;
+            for ( ; j < w.size(); j++ )
+            {
+                auto next_idx = upper_bound(chidx[w[j]-'a'].begin(),chidx[w[j]-'a'].end(),last_idx);
+                if ( next_idx == chidx[w[j]-'a'].end() )
+                {
+                    break;
+                }
+                last_idx = *next_idx;
+            }
+            
+            cnt += (j == w.size());
+        }
+        
+        return cnt;
+    }
+};

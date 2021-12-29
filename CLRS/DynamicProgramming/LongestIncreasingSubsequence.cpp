@@ -121,3 +121,38 @@ int main()
     }
     cout << "m = " << m << " n = " << n << endl;
 }
+
+// we maintain a tmp to remember numbers possibly belonging to LIS
+// then if the next number if larger than the last number and we add to it 
+// otherwise we replace that first larger number existing in the LIS with the next number (doing so would allow possible maximum following numbers)
+// to be considered as part of the LIS
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        vector<int> tmp; 
+        int n = nums.size(), lis = 0;
+        
+        for ( auto num : nums )
+        {
+            if ( tmp.empty() || tmp.back() < num )
+            {
+                tmp.push_back(num);
+            }
+            else
+            {
+                int j = 0;
+                while( j < tmp.size() )
+                {
+                    if ( tmp[j] >= num )
+                        break;
+                    j++;
+                }
+                tmp[j] = num;
+            }
+            
+            lis = max(lis,(int)tmp.size());
+        }
+        
+        return lis;
+    }
+};

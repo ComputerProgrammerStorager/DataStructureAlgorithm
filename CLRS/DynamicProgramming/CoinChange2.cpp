@@ -63,12 +63,12 @@ public:
 
 // as usual we can translate a recursion + memo to dynamic programming solution 
 // dp[idx][amt]: denotes the number of combinations using up to the idx_th coin amounting to @amt. 
-// Then to consider the next coin for all amounts, we could either a. use the amount or b. not use the amount
+// Then to consider the next coin for all amounts, we could either a. use the coin or b. not use the coin
 // For case a: it depends on the number of combinations using the same coin, but has a less amount (only if the target amount is larger than the current coin)
 // For case b: it depends on the number of combinations using only previous coins 
 // Therefore we have the recurrence relationship as following: 
 //     dp[i][amt] = dp[i-1][amt] 
-//   if (coins[i] >= amt )
+//   if (coins[i] <= amt )
 //     dp[i][amt] += dp[i][amt-coins[i]]
 // The following table shows the dp table for amount = 5, and coins[] = {1,2,5}.  We fill the table from right to left and bottom to up 
 
