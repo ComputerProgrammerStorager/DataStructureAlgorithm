@@ -44,3 +44,51 @@ Constraints:
 The test cases are generated such that there exists at least one valid array arr.
 
 */
+
+// we know the smallest value (x-k) in the sorted array after must have it's corresponding a (x+k), which will give a 2*k difference 
+// but we don't know which number if x+k.. then guess and try the k! 
+class Solution {
+public:
+    vector<int> recoverArray(vector<int>& nums) {
+        int n_2 = nums.size(); 
+        unordered_set<int> can_2k;
+        sort(nums.begin(),nums.end());
+        for ( int i = 1; i <= n_2/2; i++ )
+        {
+            int diff = nums[i] - nums[0];
+            if ( diff > 0 && diff % 2 == 0 && can_2k.count(diff) == 0 )
+            {
+                can_2k.insert(diff);
+            }
+        }
+        for ( auto diff : can_2k )
+        {
+            int cnt = 0;
+            check(nums,diff, cnt);
+            if ( cnt == n_2/2 )
+            {
+                return check(nums,diff,cnt);
+            }
+        }
+        return {};
+    }
+private:
+    vector<int> check(vector<int> const& nums, int double_diff, int &cnt )
+    {
+        unordered_map<int,int> m;
+        vector<int> res;
+        for ( auto n : nums )
+            m[n]++;
+        for ( auto n : nums )
+        {
+            if ( m[n] > 0 && m[n+double_diff] > 0 )
+            {
+                m[n]--;
+                m[n+double_diff]--;
+                res.push_back(n+double_diff/2);
+            }
+        }
+        cnt = res.size();
+        return res;
+    }
+};

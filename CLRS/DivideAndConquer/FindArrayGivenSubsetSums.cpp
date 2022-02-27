@@ -42,114 +42,95 @@ sums.length == 2n
 -104 <= sums[i] <= 104
 
 */
+
+// we know that if the numbers are all non-negative, then it's easy, beause after sorting, the second number should be a numbe in the original 
+// array. Then we can use the number to partition the array into two sum subsets, which contains and does not contain the number. So we could proceed
+// with the following step: 
+// 1. If there is any negative number, transfer it to non-negative counterpart. 
+// 2. If there is any negative number, find a subset of the non-negative result, whose sum is -mn and change all of them to negative using backtracking dfs. 
+// Note: I don't understand why step2 is sufficient and necessary to find the final result, but it seems to work. 
 class Solution {
 public:
     vector<int> recoverArray(int n, vector<int>& sums) {
-        vector<int> res;
-        sort(sums.begin(),sums.end());
-        if ( dfs(sums,n,res) ) 
-            return res;
-        return {};
-    }
-private: 
-    void Partition(vector<int> const& sums, int pivot, vector<int> &pairSum)
-    {
-        int n = sums.size(), i = 0;
-        multiset<int> st(sums.begin(),sums.end());
-        while( i < n/2 )
+        int mn = *min_element(begin(sums),end(sums));
+        vector<int> ans;
+        if ( mn < 0 )
         {
-            int sum, pair_sum;
-            if ( pivot < 0 )    // pivot < 0, then the smallest must have pivot as part of it 
-            {
-                sum = *st.begin();   
-            }
-            else    // pivot >= 0 case, the biggest sum must have pivot as part of it 
-            {
-                sum = *st.rbegin();
-            }
-            pair_sum = sum-pivot;
-            if ( st.find(pair_sum) == st.end() )
-                break;
-            pairSum.push_back(pair_sum);
-            st.erase(st.find(sum));
-            st.erase(st.find(pair_sum));
-            i++;
+            for ( auto &val : sums )
+                val += -mn;
         }
+        multiset<int> s(begin(sums),end(sums)), next_s;
+        for ( int i = 0; i < n; i++ )
+        {
+            int cur_num = *next(begin(s));
+            ans.push_back(cur_num);
+            while(s.size() > 0)
+            {
+                int first = *begin(s);
+                s.erase(begin(s));
+                next_s.insert(first);
+                s.erase(s.find(first+cur_num));
+            }
+            swap(s,next_s);
+        }
+        
+        if ( mn < 0 )
+            dfs(ans,-mn,0);
+        return ans;
     }
     
-    bool dfs(vector<int>& sums, int rem_num, vector<int> &res )
+private:
+    bool dfs(vector<int> &ans, int target_sum, int pos)
     {
-        if ( rem_num == 1 )
-        {
-            if ( sums[0] && sums[1] )
-                return false;
-            res.push_back(sums[0] ? sums[0] : sums[1] );
+        if ( pos == ans.size() ) 
+            return target_sum == 0;
+        int cur_val = ans[pos];
+        if ( dfs(ans,target_sum,pos+1) )
             return true;
-        }
-        
-        //sort(sums.begin(), sums.end());
-        int n = sums.size(), d = sums[n-1] - sums[n-2];
-        vector<int> pairSum;        // sums that do not have d or -d 
-        Partition(sums,d,pairSum);
-        if ( pairSum.size() == n/2 )
-        {
-            res.push_back(d);
-            if ( dfs(pairSum,rem_num-1,res) )
-                return true;
-            res.pop_back();
-        }
-        
-        pairSum.clear();
-        Partition(sums,-d,pairSum);
-        if ( pairSum.size() == n/2 )
-        {
-            res.push_back(-d);
-            if ( dfs(pairSum,rem_num-1,res) ) 
-                return true;
-            res.pop_back();
-        }
-        
+        ans[pos] = -cur_val;
+        if ( dfs(ans,target_sum-cur_val,pos+1) )
+            return true;
+        ans[pos] = cur_val;
         return false;
     }
 };
 
-
+// assume the original array is N0...Ni-1, Z0..Zj-1, P0....Pk-1, i.e., it has i negative integers, j zeros and k positive integers 
+// then after sorting, the difference between the minimum (all negative sum) and the second minimum is the absolute value of one of the elements 
+// i.e., assume the difference is d > 0, then either -d or d is one of the numbers. 
+// Then we can partition the sums into two parts, one having the found number and the other having no the number
+// Regardless, if the sums fall into pairs whose difference is d.  Then the one having zero in is the one that doesn't have d in it, which should be processed next. 
+// It could be possible that both parts may have zeros, which indicates that there exist a pair of x and -x in the original array. We could choose either partition in this case to proceed. 
 class Solution {
 public:
     vector<int> recoverArray(int n, vector<int>& sums) {
-        multiset<int> rem_sums(sums.begin(),sums.end());
-        vector<int> res; 
-        while( rem_sums.size() > 1)
+        vector<int> ans;
+        multiset<int> cursums(begin(sums),end(sums));
+        while( ans.size() < n ) 
         {
-            int d = *rem_sums.begin() - *next(rem_sums.begin());  // we know d <= 0
-            vector<int> small_sum, small_pair_sum;
-            multiset<int> small_sum_set, small_pair_sum_set;
-            while( rem_sums.size() > 1 )
+            int d = *next(begin(cursums)) - *begin(cursums);
+            multiset<int> small, large;
+            while( cursums.size() > 0 )
             {
-                int smallest = *rem_sums.begin();
-                rem_sums.erase(rem_sums.begin());
-                auto pair = rem_sums.find(smallest-d);
-                small_pair_sum.push_back(*pair);
-                small_sum.push_back(smallest);
-                rem_sums.erase(pair);
+                int num = *cursums.begin();
+                cursums.erase(cursums.begin());
+                cursums.erase(cursums.find(num+d));
+                small.insert(num);
+                large.insert(num+d);
             }
-            for ( auto &x : small_sum )
-                small_sum_set.insert(x);
-   
-            for ( auto &x : small_pair_sum )
-                small_pair_sum_set.insert(x);
-            if ( small_sum_set.count(0) )
+            
+            if ( small.count(0) ) 
             {
-                res.push_back(-d);
-                rem_sums.swap(small_sum_set);
+                ans.push_back(d);
+                swap(cursums,small);
             }
-            else 
+            else
             {
-                res.push_back(d);
-                rem_sums.swap(small_pair_sum_set);
+                ans.push_back(-d);
+                swap(cursums,large);
             }
         }
         
-        return res;
+        return ans;
     }
 };

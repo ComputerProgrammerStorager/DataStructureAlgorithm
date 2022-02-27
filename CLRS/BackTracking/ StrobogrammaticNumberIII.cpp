@@ -69,3 +69,34 @@ private:
         return new_num == old_num;
     }
 };
+
+// we can generate all strobogrammatic numbers starting from empty or 1 number and expand symmetrically 
+// 
+class Solution {
+public:
+    int strobogrammaticInRange(string low, string high) {
+        int cnt = 0;
+        vector<string> start_strs = {"","0","1","8"};
+        for ( auto str : start_strs )
+            dfs(low,high,str,cnt);
+        return cnt;
+    }
+    
+    void dfs(string low, string high, string cur, int& cnt)
+    {
+        vector<pair<string,string>> expand_strs = {{"0","0"},{"1","1"},{"8","8"},{"6","9"},{"9","6"}};
+        if ( cur.size() >= low.size() && cur.size() <= high.size() )
+        {
+            if ( cur.size() == high.size() && cur.compare(high) > 0 )
+                return;
+
+            if ( !(cur.size() > 1 && cur[0] == '0') && !(cur.size() == low.size() && cur.compare(low) < 0 ) )
+                cnt++;
+        }
+        
+        if ( cur.size() + 2 > high.size() )
+            return;
+        for (auto next : expand_strs )
+            dfs(low,high,next.first + cur + next.second,cnt);
+    }
+};
