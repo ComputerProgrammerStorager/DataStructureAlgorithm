@@ -46,6 +46,36 @@ public:
 };
 
 
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        TreeNode* res;
+        dfs(root,p,q, &res);
+        return res;
+    }
+
+    bool dfs(TreeNode* root, TreeNode* p, TreeNode *q, TreeNode **res)
+    {
+        if ( !root ) 
+            return false;
+        bool left = dfs(root->left,p,q, res);
+        bool right = dfs(root->right,p,q, res);
+        bool mid = root == p || root == q;
+        if ( mid + left + right == 2 )
+            *res = root;
+        return mid || left || right;
+    }
+};
+
 // we first get the parent path for both p and q, and then walk up the tree to find the lowest common ancestor 
 class Solution {
 public:

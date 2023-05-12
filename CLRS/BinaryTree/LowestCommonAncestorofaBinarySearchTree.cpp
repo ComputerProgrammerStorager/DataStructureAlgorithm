@@ -23,7 +23,7 @@ Input: root = [2,1], p = 2, q = 1
 Output: 2
 */
 
-// leverage the property of BST. This problem assumes the given p and q must bit existent nodes in the tree 
+// leverage the property of BST. This problem assumes the given p and q must be existent nodes in the tree 
 class Solution {
 public:
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
