@@ -77,3 +77,20 @@ public:
         return newhead;
     }
 };
+
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        return helper(head);   
+    }
+
+    ListNode *helper(ListNode* node)
+    {
+        if ( !node || !node->next )
+            return node;
+        ListNode *tmp = node, *new_head = node->next, *new_next = node->next->next;
+        new_head->next = tmp;
+        tmp->next = helper(new_next);
+        return new_head;
+    }
+};
