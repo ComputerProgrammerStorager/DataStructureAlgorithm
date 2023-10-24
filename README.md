@@ -1,5 +1,5 @@
 # DataStructureAlgorithm
-This contains data structure and algorithms. \
+This contains data structure and algorithms.   \
 
 If you suspect or doubt the importance of data structure and algorithm, please rethink your thought :-) \
 
