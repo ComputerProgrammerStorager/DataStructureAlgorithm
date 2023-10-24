@@ -15,6 +15,51 @@ Follow up: Can you sort the linked list in O(n logn) time and O(1) memory (i.e. 
  * };
  */
 
+
+// Insertion sort: O(n^2)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* sortList(ListNode* head) {
+        ListNode* new_head = nullptr;
+        while(head)
+        {
+            ListNode* remaining = head->next;
+            head->next = nullptr;
+            if ( new_head == nullptr )
+            {
+                new_head = head;
+            }
+            else {
+                ListNode* walk = new_head, *prev = nullptr;
+                while(walk && walk->val < head->val)
+                {
+                    prev = walk;
+                    walk = walk->next;
+                }
+                head->next = walk;
+                if ( prev == nullptr )
+                    new_head = head;
+                else 
+                    prev->next = head;
+
+            }
+            head = remaining;
+        }
+
+        return new_head;
+    }
+};
+
 // Merge sort: divide and conquer 
 // Top-down merge sort: O(lgn) stack space
 class Solution {

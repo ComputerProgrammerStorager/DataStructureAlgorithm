@@ -101,3 +101,46 @@ private:
         return pow(a.first-b.first,2) + pow(a.second-b.second,2);
     }
 };
+
+// use DFS 
+class Solution {
+public:
+    int maximumDetonation(vector<vector<int>>& bombs) {
+        int res = 0, n = bombs.size();
+        if ( n < 2 )
+            return n;
+        vector<vector<int>> graph(n);
+        for ( int i = 0; i < n; i++ )
+            for ( int j = 0; j < n; j++ )
+            {
+                if ( i == j )
+                    continue;
+                if ( withindistance({bombs[i][0],bombs[i][1]},{bombs[j][0],bombs[j][1]},bombs[i][2]) )
+                    graph[i].push_back(j);
+            }
+        for ( int i = 0; i < n; i++ )
+        {
+            set<int> visited;
+            res = max(res,dfs(i,visited,graph));
+        }
+        
+        return res;
+    }
+private:
+    bool withindistance(const pair<int,int>& center, const pair<int,int>& point, int r )
+    {
+        return power(center.first-point.first,2) + power(center.second-point.second,2) <= power(r,2);
+    }
+    int dfs(int start, set<int>& visited, const vector<vector<int>>& graph)
+    {
+        int res = 1;
+        visited.insert(start);
+        for ( auto nei : graph[start] )
+            if ( !visited.count(nei) ) 
+            {
+                res += dfs(nei,visited,graph);
+            }
+
+        return res;
+    }
+};

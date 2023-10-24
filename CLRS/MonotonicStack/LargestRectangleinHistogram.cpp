@@ -48,3 +48,27 @@ public:
         return area;
     }
 };
+
+// Divide and conquer
+// for a range (l,r) with min_idx the minimum value, then the result is max of [l..min_idx-1], [l,r] and [min_idx+1,r].
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        return calculateArea(heights,0,heights.size()-1);
+    }
+
+private:
+    int calculateArea(const vector<int>& heights, int l, int r)
+    {
+        if ( l > r )
+            return 0;
+        int min_idx = l;
+        for ( int i = l+1; i <= r; i++ )
+        {
+            if (heights[i] < heights[min_idx])
+                min_idx = i;
+        }
+
+        return max(heights[min_idx]*(r-l+1),max(calculateArea(heights,l,min_idx-1),calculateArea(heights,min_idx+1,r)));
+    }
+};

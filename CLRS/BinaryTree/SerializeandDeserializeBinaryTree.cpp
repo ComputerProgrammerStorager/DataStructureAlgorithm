@@ -190,3 +190,122 @@ public:
     }
     
 };
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Codec {
+public:
+
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        string s;
+        serialize_helper(root,s);
+        return s;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        istringstream iss(data);
+        queue<string> q;
+        for (string s; iss >> s; )
+            q.push(s);
+        return deserialize_helper(q);
+    }
+private:
+    void serialize_helper(TreeNode* root, string& s)
+    {
+        if ( !root )
+        {
+            s += "# ";
+            return ;
+        }
+        s += to_string(root->val) + " ";
+        serialize_helper(root->left,s);
+        serialize_helper(root->right,s);
+    }
+    TreeNode* deserialize_helper(queue<string>& vals)
+    {
+        const string s = vals.front();
+        vals.pop();
+        if ( s == "#" )
+            return nullptr;
+        TreeNode* root = new TreeNode(stoi(s));
+        root->left = deserialize_helper(vals);
+        root->right = deserialize_helper(vals);
+        return root;
+    }
+};
+
+// use BFS level order traversal encoding 
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Codec {
+public:
+
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        string res;
+        if ( !root )
+            return "";
+        queue<TreeNode*> q{{root}};
+        while(!q.empty())
+        {
+            TreeNode* node = q.front();
+            q.pop();
+            if ( node ){
+                res += to_string(node->val) + " ";
+                q.push(node->left);
+                q.push(node->right);
+            } else {
+                res += "# ";
+            }
+        }
+
+        return res;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        if ( data.empty() )
+            return nullptr;
+        istringstream iss(data);
+        string val;
+        iss >> val;
+        TreeNode* root = new TreeNode(stoi(val));
+        queue<TreeNode*> q{{root}};
+        while( iss >> val ){
+            TreeNode* node = q.front();
+            q.pop();
+            if ( val != "#") {
+                node->left = new TreeNode(stoi(val));
+                q.push(node->left);
+            }
+            iss >> val;
+            if ( val != "#")
+            {
+                node->right = new TreeNode(stoi(val));
+                q.push(node->right);
+            }
+        }
+
+        return root;
+    }
+};
+
+// Your Codec object will be instantiated and called as such:
+// Codec ser, deser;
+// TreeNode* ans = deser.deserialize(ser.serialize(root));

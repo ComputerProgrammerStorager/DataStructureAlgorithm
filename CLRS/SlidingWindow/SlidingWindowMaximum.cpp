@@ -61,7 +61,7 @@ public:
     }
 };
 
-// we can improve on the previous solution by using a multiset to sort the windown elements 
+// we can improve on the previous solution by using a multiset to sort the window's elements 
 // O(nlgk)
 class Solution {
 public:
@@ -126,3 +126,4 @@ public:
         return res;
     }
 };
+

@@ -71,7 +71,7 @@ public:
         {
             int j = suffix[i-1];
             while ( j > 0 && s[j] != s[i] )
-                j = suffix[j];
+                j = suffix[j-1];
             suffix[i] = s[i] != s[j] ? 0 : j + 1;
         }
         return s.substr(0,suffix[n-1]);

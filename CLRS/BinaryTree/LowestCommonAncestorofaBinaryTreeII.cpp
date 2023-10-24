@@ -36,7 +36,7 @@ p != q
 */
 
 // Search function returns the node found in the tree rooted @root, and if found is true, then the lca of p and q. 
-// since p or q might not exist in the tree, so we also need to indicate whether the a node exists or not in the tree 
+// since p or q might not exist in the tree, so we also need to indicate whether a node exists or not in the tree 
 // for each subtree, we return a pair of node and bool, indicating which node is on the subtree and if the node is the lca 
 class Solution {
 public:

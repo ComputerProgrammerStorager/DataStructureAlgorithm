@@ -78,3 +78,35 @@ public:
         return (node->val >= cur_max) + helper(node->left,max(cur_max,node->val)) + helper(node->right,max(cur_max,node->val));
     }
 };
+
+// use the our own stack 
+class Solution {
+public:
+    int goodNodes(TreeNode* root) {
+        int cnt = 0;
+        stack<pair<TreeNode*,int>> s;
+        if ( !root )
+            return cnt;
+        s.push({root,INT_MIN});
+        while(!s.empty())
+        {
+            auto node = s.top();
+            s.pop();
+            if ( node.first->val >= node.second )
+            {
+                cnt++;
+            }
+            int new_max = max(node.first->val,node.second);
+            if ( node.first->left )
+            {
+                s.push({node.first->left,new_max});
+            }
+            if ( node.first->right )
+            {
+                s.push({node.first->right,new_max});
+            }
+        }
+
+        return cnt;
+    }
+};

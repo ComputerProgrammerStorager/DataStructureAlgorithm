@@ -47,6 +47,30 @@ public:
     }
 };
 
+// iterative recursion 
+class Solution {
+public:
+    bool isValidBST(TreeNode* root) {
+        stack<pair<TreeNode*,pair<long,long>>> s;
+        if ( !root )
+            return true;
+        s.push({root,{LONG_MIN,LONG_MAX}});
+        while(!s.empty())
+        {
+            auto node = s.top();
+            s.pop();
+            if ( node.first->val <= node.second.first || node.first->val >= node.second.second )
+                return false;
+            if ( node.first->left )
+                s.push({node.first->left,{node.second.first,node.first->val}});
+            if ( node.first->right )
+                s.push({node.first->right,{node.first->val,node.second.second}});
+        }
+
+        return true;
+    }
+};
+
 // check the inorder traversal satisfies sorted, while traversing 
 class Solution {
 public:
@@ -72,4 +96,25 @@ public:
         return true;
     }
 
+};
+
+// Use inorder traversal check 
+class Solution {
+public:
+    bool isValidBST(TreeNode* root) {
+        TreeNode* prev = nullptr;
+        return inorder(root,&prev);
+    }
+
+    bool inorder(TreeNode* root, TreeNode** prev)
+    {
+        if ( !root )
+            return true;
+        if ( !inorder(root->left,prev) )
+            return false;
+        if ( *prev && (*prev)->val >= root->val )
+            return false;
+        *prev = root;
+        return inorder(root->right,prev);
+    }
 };

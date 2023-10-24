@@ -140,7 +140,6 @@ public:
             if ( node == nullptr )
                 break;
         }
-        
         return ret;
     }
 };

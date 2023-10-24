@@ -207,3 +207,66 @@ public:
             node->IsWord = false;
     }
 };
+
+class TrieNode {
+public:
+    TrieNode* children[26];
+    bool isWord;
+    TrieNode() {
+        for ( int i = 0; i < 26; i++ )
+            children[i] = nullptr;
+        isWord = false;
+    }
+};
+class Solution {
+private:
+    TrieNode *root = new TrieNode();
+    int m, n;
+    void insert(const string& word )
+    {
+        TrieNode *walk = root;
+        for ( int i = 0; i < word.size(); i++ )
+        {
+            if ( walk->children[word[i]-'a'] == nullptr )
+                walk->children[word[i]-'a'] = new TrieNode();
+            walk = walk->children[word[i]-'a'];
+        }
+        walk->isWord = true;
+    }
+    void backtrack(vector<vector<char>>& board, int r, int c, string word, TrieNode* root, vector<string>& res)
+    {
+        if ( r < 0 || r >= m || c < 0 || c >= n || board[r][c] == '#' )
+            return;
+        char ch = board[r][c];
+        TrieNode* node = root->children[ch-'a'];
+        if ( node == nullptr )
+            return;
+        word += ch;
+        if ( node->isWord )
+        {
+            res.push_back(word);
+            node->isWord = false;
+        }
+        board[r][c] = '#';
+        backtrack(board,r+1,c,word,node,res);
+        backtrack(board,r,c+1,word,node,res);
+        backtrack(board,r-1,c,word,node,res);
+        backtrack(board,r,c-1,word,node,res);
+        board[r][c] = ch;
+    }
+public:
+    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+        int m = board.size(), n = board[0].size();
+        for ( auto w : words )
+            insert(w);
+        vector<string> res;
+        for ( int i = 0; i < m; i++ )
+            for ( int j = 0; j < n; j++ )
+            {
+                string cur_word;
+                backtrack(board,i,j,cur_word,root,res);
+            }
+
+        return res;
+    }
+};

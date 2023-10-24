@@ -75,3 +75,72 @@ private:
     list<pair<int,int>> l;
     int cap;
 };
+
+
+// We can build our own doubly linked list 
+struct Node {
+    int val;
+    int key;
+    Node *next, *prev;
+    Node(int key, int val) : key(key), val(val), next(nullptr), prev(nullptr) {}
+};
+
+class LRUCache {
+private:
+    int cap;
+    unordered_map<int,Node*> dict;
+    Node *head = new Node(-1,-1);
+    Node *tail = new Node(-1,-1);
+    void removeNode(Node *node)
+    {
+        node->next->prev = node->prev;
+        node->prev->next = node->next;
+    }
+    void addNode(Node *node)
+    {
+        Node *prevEnd = tail->prev;
+        prevEnd->next = node;
+        node->prev = prevEnd;
+        node->next = tail;
+        tail->prev = node;
+    }
+public:
+    LRUCache(int capacity) {
+        cap = capacity;
+        head->next = tail;
+        tail->prev = head;
+    }
+    
+    int get(int key) {
+        if ( dict.find(key) == dict.end() )
+            return -1;
+        Node *node = dict[key];
+        removeNode(node);
+        addNode(node);
+        return node->val;
+    }
+    
+    void put(int key, int value) {
+        if ( dict.find(key) != dict.end() )
+        {
+            removeNode(dict[key]);
+        }
+
+        Node *node = new Node(key,value);
+        dict[key] = node;
+        addNode(node);
+        if ( dict.size() > cap )
+        {
+            Node *todelete = head->next;
+            dict.erase(todelete->key);
+            removeNode(todelete);
+        }
+    }
+};
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache* obj = new LRUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
