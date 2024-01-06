@@ -48,3 +48,23 @@ public:
         return *max_element(dp.begin(),dp.end());
     }
 };
+
+// sort the pairs based on end time and greedily pick up the pair which minimizes the cur end time; 
+class Solution {
+public:
+    int findLongestChain(vector<vector<int>>& pairs) {
+        auto cmp =[](vector<int>& a, vector<int>&b) {
+            return a[1] < b[1];
+        };
+        sort(pairs.begin(),pairs.end(),cmp);
+        int ans = 0, cur = INT_MIN;
+        for ( int i = 0; i < pairs.size(); i++ ) {
+            if ( pairs[i][0] > cur ) {
+                ans++;
+                cur = pairs[i][1];
+            }
+        }
+
+        return ans;
+    }
+};

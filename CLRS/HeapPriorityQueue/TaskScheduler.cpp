@@ -45,7 +45,7 @@ The integer n is in the range [0, 100].
 // T ***(n) T ***(n).... T. 
 // However, these idle time slots could be used to complete any other tasks in a greedy manner. 
 // So for each less frequent task, if it could leverage available idle time slot, which is min(max_freq-1, freq[i]). 
-// It's possible that there is no avaliable slot time for a less frequent task, where it will placed at the last of the sequence. 
+// It's possible that there is no avaliable slot time for a less frequent task, where it will placed be at the last of the sequence. 
 // those are counted in by tasks.size(). 
 
 class Solution {

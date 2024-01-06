@@ -22,7 +22,7 @@ Constraints:
 */
 
 // The problem is eqivalent to the ask: what is the max area if an element arr[m] is included in the max rectangle 
-// To find the area, then we need to find the left smaller number and the right smaller number. Apparently, we can use monotonically increasing stack to help use get the lowers 
+// To find the area, then we need to find the left smaller number and the right smaller number. Apparently, we can use monotonically increasing stack to help us get the lowers 
 // A worthy note is when there are two consecutive same numbers, i.e., [..x1,x2..]. since when we pop out a number, meaning the right next number should not be included. 
 // However, in this case x1 and x2 should be both included in the rectangle, it's simply because they can be a valid rectangle. 
 class Solution {

@@ -81,3 +81,32 @@ public:
         return memo[pos] = cur_maxprofit;
     }
 };
+
+
+// For each job, we consider if it's worth to take it or not. 
+// If we take it, then the profit is the max_profit up to the job's start time's maxProfit 
+// If we don't take it, then the profit is current max_profit, i.e., the max_profit up to the previous job 
+// So we store all max_profit in a sorted set, i.e., for finding those required previous values 
+// Note: to avoid out-of-range of prev(upper_bound(val),1) we init the map[-1] = 0 or map[0] = 0, as endtime is > 0, to ensure upper_bound never returns begin(). 
+class Solution {
+public:
+    int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& profit) {
+        int max_profit = INT_MIN, n = endTime.size();
+        map<int,int> dp;
+        dp[0] = 0;
+        vector<vector<int>> jobs;
+        for ( int i = 0; i < n; i++ ) {
+            jobs.push_back({endTime[i],startTime[i],profit[i]});
+        }
+
+        sort(jobs.begin(),jobs.end());
+        for ( int i = 0; i < n; i++ ) {
+            int take = prev(dp.upper_bound(jobs[i][1]),1)->second + jobs[i][2];
+            int not_take = max_profit;
+            max_profit = max(take,not_take);
+            dp[jobs[i][0]] = max_profit;
+        }
+
+        return max_profit;
+    }
+};
